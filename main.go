@@ -14,9 +14,7 @@ func main() {
 	dbURL := os.Getenv("DATABASE_URL")
 
 	if dbURL == "" {
-
-		dbURL = "postgres://postgres:postgres@127.0.0.1/postgres?sslmode=disable"
-		fmt.Println("[info] DATABASE_URL environment variable not provided, using default")
+		dbURL = "host=/var/run/postgresql/ sslmode=disable"
 	}
 
 	db, err := sql.Open("postgres", dbURL)
@@ -52,7 +50,7 @@ func main() {
 
 		outFile := fmt.Sprintf("%s_%s.pg_dump", name, timeString)
 
-		cmd := exec.Command("pg_dump", "-F", "c", "-d", dbURL, "-f", outFile)
+		cmd := exec.Command("pg_dump", "-w", "-F", "c", "-d", name, "-f", outFile)
 
 		out, err := cmd.Output()
 
